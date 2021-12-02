@@ -9,6 +9,7 @@ mydb = mysql.connector.connect(
     database="Crime_Analysis"
 )
 
+#Creating Tables
 mycursor = mydb.cursor()
 mycursor.execute("create table VICTIM_descent(Vict_Descent varchar(5) primary key,Vict_Descent_desc varchar(50))");
 # mycursor.execute("create table VICTIM_SEX(Vict_SEX_code varchar(5) primary key,Vict_SEX_desc varchar(10))");
@@ -18,6 +19,8 @@ mycursor.execute("CREATE TABLE crime_data_TF(DR_NO INT,DATE_OCC DATE, area_id IN
                  "status_desc varchar(50),LOCATION varchar(50),latitude INT,"
                  "longitude integer,id INT,FOREIGN KEY (VICT_DESCENT) REFERENCES VICTIM_descent(Vict_Descent),"
                  "FOREIGN KEY (VICT_SEX) REFERENCES VICTIM_SEX(Vict_SEX_code))");
+
+#Inserting the CSV data using Pandas
 
 df = pd.read_csv(r'D:\Database\Project\VICT_DESC.csv')
 for i, row in df.iterrows():
@@ -49,6 +52,8 @@ for i,row in df.iterrows():
     print("Record inserted")
     mydb.commit()
 
+#Number of victims in targeted in the Christmas holidays in Southwest area od LA. 
+    
 select_Crimee = """select V.Vict_SEX_desc,count(V.Vict_SEX_code) from crime_data_tf c
                     inner join victim_sex V
                     on C.VICT_SEX = V.Vict_SEX_code
@@ -58,6 +63,8 @@ with mydb.cursor() as cursor:
     cursor.execute(select_Crimee)
     for row in cursor.fetchall():
         print(row)
+
+#What race has been targeted in the Northeast region.
 
 select_Crimee = """select V.Vict_Descent_desc,count(V.Vict_Descent) Number_of_victims from crime_data_tf c
                     inner join victim_descent V
